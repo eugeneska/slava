@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить клиента - CleanPro{% endblock %}
+
+{% block content %}
+<h1>➕ Добавить клиента</h1>
+
+<form method="POST" action="{{ url_for('add_client') }}">
+    <div class="form-group">
+        <label for="fullname">Имя/Название компании *</label>
+        <input type="text" id="fullname" name="fullname" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Телефон</label>
+        <input type="tel" id="phone" name="phone" placeholder="+375 XX XXX-XX-XX">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email">
+    </div>
+
+    <div class="form-group">
+        <label for="address">Адрес</label>
+        <input type="text" id="address" name="address">
+    </div>
+
+    <div class="form-group">
+        <label for="company">Название компании (если юр. лицо)</label>
+        <input type="text" id="company" name="company">
+    </div>
+
+    <div class="form-group">
+        <label for="contact">Контактное лицо</label>
+        <input type="text" id="contact" name="contact">
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('clients') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

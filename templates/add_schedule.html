@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить расписание - CleanPro{% endblock %}
+
+{% block content %}
+<h1>➕ Добавить расписание уборки</h1>
+
+<form method="POST" action="{{ url_for('add_schedule') }}">
+    <div class="form-group">
+        <label for="object_id">Объект *</label>
+        <select id="object_id" name="object_id" required>
+            <option value="">Выберите объект</option>
+            {% for obj in objects %}
+            <option value="{{ obj.ID }}">{{ obj.ObjectName }} ({{ obj.ClientName }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="service_id">Услуга *</label>
+        <select id="service_id" name="service_id" required>
+            <option value="">Выберите услугу</option>
+            {% for service in services %}
+            <option value="{{ service.ID }}">{{ service.ServiceName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="employee_id">Сотрудник</label>
+        <select id="employee_id" name="employee_id">
+            <option value="">Не назначен</option>
+            {% for emp in employees %}
+            <option value="{{ emp.ID }}">{{ emp.FullName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="scheduled_date">Дата *</label>
+        <input type="date" id="scheduled_date" name="scheduled_date" required>
+    </div>
+
+    <div class="form-group">
+        <label for="scheduled_time">Время</label>
+        <input type="time" id="scheduled_time" name="scheduled_time">
+    </div>
+
+    <div class="form-group">
+        <label for="duration">Длительность (минуты)</label>
+        <input type="number" id="duration" name="duration">
+    </div>
+
+    <div class="form-group">
+        <label for="cost">Стоимость (BYN)</label>
+        <input type="number" step="0.01" id="cost" name="cost">
+    </div>
+
+    <div class="form-group">
+        <label for="status">Статус</label>
+        <select id="status" name="status">
+            <option value="Запланировано">Запланировано</option>
+            <option value="В процессе">В процессе</option>
+            <option value="Выполнено">Выполнено</option>
+            <option value="Отменено">Отменено</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('schedules') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

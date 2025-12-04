@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Расписание - CleanPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    .status-scheduled { background: #bee3f8; color: #2c5282; }
+    .status-inprogress { background: #feebc8; color: #7c2d12; }
+    .status-completed { background: #c6f6d5; color: #22543d; }
+    .status-cancelled { background: #fed7d7; color: #742a2a; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h1>📅 Расписание уборок</h1>
+    <a href="{{ url_for('add_schedule') }}" class="btn btn-primary">➕ Добавить расписание</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата/Время</th>
+                <th>Объект</th>
+                <th>Клиент</th>
+                <th>Услуга</th>
+                <th>Сотрудник</th>
+                <th>Стоимость</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule in schedules %}
+            <tr>
+                <td>{{ schedule.ID }}</td>
+
+                <td>
+                    <strong>
+                        {% if schedule.ScheduledDate %}
+                            {{ schedule.ScheduledDate }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong><br>
+
+                    <small>
+                        {% if schedule.ScheduledTime %}
+                            {{ schedule.ScheduledTime }}
+                        {% else %}
+                            --:--
+                        {% endif %}
+                    </small>
+                </td>
+
+                <td>{{ schedule.ObjectName }}</td>
+                <td>{{ schedule.ClientName }}</td>
+                <td>{{ schedule.ServiceName }}</td>
+                <td>{{ schedule.EmployeeName or 'Не назначен' }}</td>
+                <td>{{ schedule.Cost or '-' }} BYN</td>
+
+                <td>
+                    {% if schedule.Status == 'Запланировано' %}
+                        <span class="status-badge status-scheduled">{{ schedule.Status }}</span>
+                    {% elif schedule.Status == 'В процессе' %}
+                        <span class="status-badge status-inprogress">{{ schedule.Status }}</span>
+                    {% elif schedule.Status == 'Выполнено' %}
+                        <span class="status-badge status-completed">{{ schedule.Status }}</span>
+                    {% else %}
+                        <span class="status-badge status-cancelled">{{ schedule.Status }}</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="{{ url_for('edit_schedule', id=schedule.ID) }}" class="btn btn-warning btn-sm">✏️</a>
+                    <a href="{{ url_for('delete_schedule', id=schedule.ID) }}"
+                       onclick="return confirm('Удалить расписание?')"
+                       class="btn btn-danger btn-sm">🗑️</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="text-center">Расписание не найдено</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

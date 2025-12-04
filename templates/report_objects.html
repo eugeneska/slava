@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Отчет по объектам - CleanPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: var(--light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border-left: 4px solid var(--primary);
+    }
+
+    .stat-box-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-box-label {
+        color: var(--gray);
+        font-size: 0.875rem;
+    }
+
+    .print-btn {
+        margin-left: auto;
+    }
+
+    @media print {
+        .btn, .report-header .btn {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-header">
+    <h1>🏢 Отчет по объектам</h1>
+    <div>
+        <a href="{{ url_for('reports') }}" class="btn btn-secondary">← Назад к отчетам</a>
+        <button onclick="window.print()" class="btn btn-primary print-btn">🖨️ Печать</button>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.total or 0 }}</div>
+        <div class="stat-box-label">Всего объектов</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ "%.0f"|format(stats.total_area or 0) }}</div>
+        <div class="stat-box-label">Общая площадь, м²</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.with_services or 0 }}</div>
+        <div class="stat-box-label">С выполненными заказами</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.types_count or 0 }}</div>
+        <div class="stat-box-label">Типов объектов</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Клиент</th>
+                <th>Адрес</th>
+                <th>Тип</th>
+                <th>Площадь, м²</th>
+                <th>Заказов</th>
+                <th>Выручка, BYN</th>
+                <th>Последняя уборка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+            <tr>
+                <td>{{ obj.ID }}</td>
+                <td><strong>{{ obj.ObjectName }}</strong></td>
+                <td>{{ obj.ClientName }}</td>
+                <td>{{ obj.Address or '-' }}</td>
+                <td><span class="badge badge-info">{{ obj.ObjectType or '-' }}</span></td>
+                <td>{{ "%.0f"|format(obj.Area) if obj.Area else '-' }}</td>
+                <td><span class="badge badge-success">{{ obj.total_orders }}</span></td>
+                <td><strong>{{ "%.2f"|format(obj.total_revenue or 0) }}</strong></td>
+                <td>
+                    {% if obj.last_service_date %}
+                        {{ obj.last_service_date.strftime('%d.%m.%Y') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="text-center">Объекты не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<p style="text-align: center; color: var(--gray); margin-top: 2rem; font-size: 0.875rem;">
+    Отчет сформирован: {{ current_date.strftime('%d.%m.%Y %H:%M') }}
+</p>
+{% endblock %}
+

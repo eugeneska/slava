@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать объект - CleanPro{% endblock %}
+
+{% block content %}
+<h1>✏️ Редактировать объект</h1>
+
+<form method="POST" action="{{ url_for('edit_object', id=object.ID) }}">
+    <div class="form-group">
+        <label for="client_id">Клиент *</label>
+        <select id="client_id" name="client_id" required>
+            {% for client in clients %}
+            <option value="{{ client.ID }}" {% if client.ID == object.ClientID %}selected{% endif %}>
+                {{ client.FullName }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="object_name">Название объекта *</label>
+        <input type="text" id="object_name" name="object_name" value="{{ object.ObjectName }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Адрес *</label>
+        <input type="text" id="address" name="address" value="{{ object.Address }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="area">Площадь (м²)</label>
+        <input type="number" step="0.01" id="area" name="area" value="{{ object.Area or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="object_type">Тип объекта</label>
+        <select id="object_type" name="object_type">
+            <option value="Офис" {% if object.ObjectType == 'Офис' %}selected{% endif %}>Офис</option>
+            <option value="Квартира" {% if object.ObjectType == 'Квартира' %}selected{% endif %}>Квартира</option>
+            <option value="Дом" {% if object.ObjectType == 'Дом' %}selected{% endif %}>Дом</option>
+            <option value="Склад" {% if object.ObjectType == 'Склад' %}selected{% endif %}>Склад</option>
+            <option value="Торговый центр" {% if object.ObjectType == 'Торговый центр' %}selected{% endif %}>Торговый центр</option>
+            <option value="Другое" {% if object.ObjectType == 'Другое' %}selected{% endif %}>Другое</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="access_info">Информация о доступе</label>
+        <textarea id="access_info" name="access_info">{{ object.AccessInfo or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes">{{ object.Notes or '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('objects') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

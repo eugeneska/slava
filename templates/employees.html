@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Сотрудники - CleanPro{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h1>👔 Сотрудники</h1>
+    <a href="{{ url_for('add_employee') }}" class="btn btn-primary">➕ Добавить сотрудника</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ФИО</th>
+                <th>Должность</th>
+                <th>Телефон</th>
+                <th>Email</th>
+                <th>Зарплата</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.ID }}</td>
+                <td><strong>{{ emp.FullName }}</strong></td>
+                <td>{{ emp.Position or '-' }}</td>
+                <td>{{ emp.Phone or '-' }}</td>
+                <td>{{ emp.Email or '-' }}</td>
+                <td>{{ emp.Salary or '-' }} BYN</td>
+                <td>
+                    {% if emp.Status == 'Активен' %}
+                        <span class="badge badge-success">{{ emp.Status }}</span>
+                    {% elif emp.Status == 'В отпуске' %}
+                        <span class="badge badge-warning">{{ emp.Status }}</span>
+                    {% else %}
+                        <span class="badge badge-danger">{{ emp.Status }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_employee', id=emp.ID) }}" class="btn btn-warning btn-sm">✏️</a>
+                    <a href="{{ url_for('delete_employee', id=emp.ID) }}"
+                       onclick="return confirm('Удалить сотрудника?')"
+                       class="btn btn-danger btn-sm">🗑️</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="8" class="text-center">Сотрудники не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

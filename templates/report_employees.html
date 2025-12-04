@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Отчет по сотрудникам - CleanPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: var(--light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border-left: 4px solid var(--primary);
+    }
+
+    .stat-box-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-box-label {
+        color: var(--gray);
+        font-size: 0.875rem;
+    }
+
+    .print-btn {
+        margin-left: auto;
+    }
+
+    @media print {
+        .btn, .report-header .btn {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-header">
+    <h1>👔 Отчет по сотрудникам</h1>
+    <div>
+        <a href="{{ url_for('reports') }}" class="btn btn-secondary">← Назад к отчетам</a>
+        <button onclick="window.print()" class="btn btn-primary print-btn">🖨️ Печать</button>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.total or 0 }}</div>
+        <div class="stat-box-label">Всего сотрудников</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.active or 0 }}</div>
+        <div class="stat-box-label">Активных</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.inactive or 0 }}</div>
+        <div class="stat-box-label">Неактивных</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ "%.2f"|format(stats.avg_salary or 0) }}</div>
+        <div class="stat-box-label">Средняя зарплата, BYN</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ "%.2f"|format(stats.total_salary or 0) }}</div>
+        <div class="stat-box-label">Фонд оплаты, BYN</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ФИО</th>
+                <th>Должность</th>
+                <th>Телефон</th>
+                <th>Email</th>
+                <th>Статус</th>
+                <th>Зарплата, BYN</th>
+                <th>Заказов</th>
+                <th>Выполнено</th>
+                <th>Выручка, BYN</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.ID }}</td>
+                <td><strong>{{ emp.FullName }}</strong></td>
+                <td>{{ emp.Position or '-' }}</td>
+                <td>{{ emp.Phone or '-' }}</td>
+                <td>{{ emp.Email or '-' }}</td>
+                <td>
+                    {% if emp.Status == 'Активен' %}
+                        <span class="badge badge-success">{{ emp.Status }}</span>
+                    {% else %}
+                        <span class="badge badge-danger">{{ emp.Status }}</span>
+                    {% endif %}
+                </td>
+                <td><strong>{{ "%.2f"|format(emp.Salary) if emp.Salary else '-' }}</strong></td>
+                <td><span class="badge badge-info">{{ emp.total_orders }}</span></td>
+                <td><span class="badge badge-success">{{ emp.completed_orders }}</span></td>
+                <td><strong>{{ "%.2f"|format(emp.total_revenue or 0) }}</strong></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="10" class="text-center">Сотрудники не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<p style="text-align: center; color: var(--gray); margin-top: 2rem; font-size: 0.875rem;">
+    Отчет сформирован: {{ current_date.strftime('%d.%m.%Y %H:%M') }}
+</p>
+{% endblock %}
+

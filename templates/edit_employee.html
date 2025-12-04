@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать сотрудника - CleanPro{% endblock %}
+
+{% block content %}
+<h1>✏️ Редактировать сотрудника</h1>
+
+<form method="POST" action="{{ url_for('edit_employee', id=employee.ID) }}">
+    <div class="form-group">
+        <label for="fullname">ФИО *</label>
+        <input type="text" id="fullname" name="fullname" value="{{ employee.FullName }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="position">Должность</label>
+        <input type="text" id="position" name="position" value="{{ employee.Position or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Телефон</label>
+        <input type="tel" id="phone" name="phone" value="{{ employee.Phone or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ employee.Email or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="passport">Паспортные данные</label>
+        <input type="text" id="passport" name="passport" value="{{ employee.PassportData or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="hire_date">Дата приема</label>
+        <input type="date" id="hire_date" name="hire_date" value="{{ employee.HireDate or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="salary">Зарплата (BYN)</label>
+        <input type="number" step="0.01" id="salary" name="salary" value="{{ employee.Salary or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="status">Статус</label>
+        <select id="status" name="status">
+            <option value="Активен" {% if employee.Status == 'Активен' %}selected{% endif %}>Активен</option>
+            <option value="В отпуске" {% if employee.Status == 'В отпуске' %}selected{% endif %}>В отпуске</option>
+            <option value="Уволен" {% if employee.Status == 'Уволен' %}selected{% endif %}>Уволен</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes">{{ employee.Notes or '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('employees') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

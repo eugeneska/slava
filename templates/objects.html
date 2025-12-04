@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Объекты - CleanPro{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h1>🏢 Объекты</h1>
+    <a href="{{ url_for('add_object') }}" class="btn btn-primary">➕ Добавить объект</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Клиент</th>
+                <th>Адрес</th>
+                <th>Площадь</th>
+                <th>Тип</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+            <tr>
+                <td>{{ obj.ID }}</td>
+                <td><strong>{{ obj.ObjectName }}</strong></td>
+                <td>{{ obj.ClientName }}</td>
+                <td>{{ obj.Address }}</td>
+                <td>{{ obj.Area or '-' }} м²</td>
+                <td><span class="badge badge-info">{{ obj.ObjectType }}</span></td>
+                <td>
+                    <a href="{{ url_for('edit_object', id=obj.ID) }}" class="btn btn-warning btn-sm">✏️</a>
+                    <a href="{{ url_for('delete_object', id=obj.ID) }}"
+                       onclick="return confirm('Удалить объект?')"
+                       class="btn btn-danger btn-sm">🗑️</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center">Объекты не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Услуги - CleanPro{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h1>🛠️ Услуги</h1>
+    <a href="{{ url_for('add_service') }}" class="btn btn-primary">➕ Добавить услугу</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Цена</th>
+                <th>Единица</th>
+                <th>Длительность</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.ID }}</td>
+                <td><strong>{{ service.ServiceName }}</strong></td>
+                <td>{{ service.Description or '-' }}</td>
+                <td>{{ service.PricePerUnit or '-' }} BYN</td>
+                <td>{{ service.Unit or '-' }}</td>
+                <td>{{ service.Duration or '-' }} мин</td>
+                <td>
+                    <a href="{{ url_for('edit_service', id=service.ID) }}" class="btn btn-warning btn-sm">✏️</a>
+                    <a href="{{ url_for('delete_service', id=service.ID) }}"
+                       onclick="return confirm('Удалить услугу?')"
+                       class="btn btn-danger btn-sm">🗑️</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center">Услуги не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

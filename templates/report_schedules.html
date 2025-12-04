@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Отчет по расписанию - CleanPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: var(--light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border-left: 4px solid var(--primary);
+    }
+
+    .stat-box-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-box-label {
+        color: var(--gray);
+        font-size: 0.875rem;
+    }
+
+    .filters {
+        background: var(--light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .filters-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .print-btn {
+        margin-left: auto;
+    }
+
+    @media print {
+        .btn, .report-header .btn, .filters {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-header">
+    <h1>📅 Отчет по расписанию</h1>
+    <div>
+        <a href="{{ url_for('reports') }}" class="btn btn-secondary">← Назад к отчетам</a>
+        <button onclick="window.print()" class="btn btn-primary print-btn">🖨️ Печать</button>
+    </div>
+</div>
+
+<div class="filters">
+    <h3 style="margin-bottom: 1rem;">Фильтры</h3>
+    <form method="GET" class="filters-form">
+        <div class="form-group">
+            <label>Статус</label>
+            <select name="status">
+                <option value="">Все статусы</option>
+                <option value="Запланировано" {% if status_filter == 'Запланировано' %}selected{% endif %}>Запланировано</option>
+                <option value="Выполнено" {% if status_filter == 'Выполнено' %}selected{% endif %}>Выполнено</option>
+                <option value="Отменено" {% if status_filter == 'Отменено' %}selected{% endif %}>Отменено</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Дата от</label>
+            <input type="date" name="date_from" value="{{ date_from }}">
+        </div>
+        <div class="form-group">
+            <label>Дата до</label>
+            <input type="date" name="date_to" value="{{ date_to }}">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Применить</button>
+            <a href="{{ url_for('report_schedules') }}" class="btn btn-secondary">Сбросить</a>
+        </div>
+    </form>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.total or 0 }}</div>
+        <div class="stat-box-label">Всего заказов</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.scheduled or 0 }}</div>
+        <div class="stat-box-label">Запланировано</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.completed or 0 }}</div>
+        <div class="stat-box-label">Выполнено</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ stats.cancelled or 0 }}</div>
+        <div class="stat-box-label">Отменено</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ "%.2f"|format(stats.total_revenue or 0) }}</div>
+        <div class="stat-box-label">Общая выручка, BYN</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ "%.2f"|format(stats.revenue_month or 0) }}</div>
+        <div class="stat-box-label">Выручка за месяц, BYN</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-value">{{ "%.2f"|format(stats.avg_order_cost or 0) }}</div>
+        <div class="stat-box-label">Средний чек, BYN</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Клиент</th>
+                <th>Объект</th>
+                <th>Услуга</th>
+                <th>Сотрудник</th>
+                <th>Статус</th>
+                <th>Стоимость, BYN</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule in schedules %}
+            <tr>
+                <td>{{ schedule.ID }}</td>
+                <td>
+                    {% if schedule.ScheduledDate %}
+                        {{ schedule.ScheduledDate.strftime('%d.%m.%Y') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if schedule.ScheduledTime %}
+                        {{ schedule.ScheduledTime.strftime('%H:%M') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ schedule.ClientName }}</strong>
+                    {% if schedule.ClientPhone %}
+                    <br><small style="color: var(--gray);">{{ schedule.ClientPhone }}</small>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ schedule.ObjectName }}</strong>
+                    {% if schedule.ObjectAddress %}
+                    <br><small style="color: var(--gray);">{{ schedule.ObjectAddress }}</small>
+                    {% endif %}
+                </td>
+                <td>{{ schedule.ServiceName }}</td>
+                <td>{{ schedule.EmployeeName or '-' }}</td>
+                <td>
+                    {% if schedule.Status == 'Выполнено' %}
+                        <span class="badge badge-success">{{ schedule.Status }}</span>
+                    {% elif schedule.Status == 'Запланировано' %}
+                        <span class="badge badge-info">{{ schedule.Status }}</span>
+                    {% elif schedule.Status == 'Отменено' %}
+                        <span class="badge badge-danger">{{ schedule.Status }}</span>
+                    {% else %}
+                        <span class="badge badge-warning">{{ schedule.Status }}</span>
+                    {% endif %}
+                </td>
+                <td><strong>{{ "%.2f"|format(schedule.Cost) if schedule.Cost else '-' }}</strong></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="text-center">Заказы не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<p style="text-align: center; color: var(--gray); margin-top: 2rem; font-size: 0.875rem;">
+    Отчет сформирован: {{ current_date.strftime('%d.%m.%Y %H:%M') }}
+</p>
+{% endblock %}
+

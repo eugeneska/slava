@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить сотрудника - CleanPro{% endblock %}
+
+{% block content %}
+<h1>➕ Добавить сотрудника</h1>
+
+<form method="POST" action="{{ url_for('add_employee') }}">
+    <div class="form-group">
+        <label for="fullname">ФИО *</label>
+        <input type="text" id="fullname" name="fullname" required>
+    </div>
+
+    <div class="form-group">
+        <label for="position">Должность</label>
+        <input type="text" id="position" name="position">
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Телефон</label>
+        <input type="tel" id="phone" name="phone">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email">
+    </div>
+
+    <div class="form-group">
+        <label for="passport">Паспортные данные</label>
+        <input type="text" id="passport" name="passport">
+    </div>
+
+    <div class="form-group">
+        <label for="hire_date">Дата приема</label>
+        <input type="date" id="hire_date" name="hire_date">
+    </div>
+
+    <div class="form-group">
+        <label for="salary">Зарплата (BYN)</label>
+        <input type="number" step="0.01" id="salary" name="salary">
+    </div>
+
+    <div class="form-group">
+        <label for="status">Статус</label>
+        <select id="status" name="status">
+            <option value="Активен">Активен</option>
+            <option value="В отпуске">В отпуске</option>
+            <option value="Уволен">Уволен</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('employees') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

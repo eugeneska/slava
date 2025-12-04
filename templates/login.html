@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Вход - CleanPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 450px;
+        padding: 0 1rem;
+    }
+
+    .content-wrapper {
+        padding: 3rem 2.5rem;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-logo {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-subtitle {
+        color: var(--gray);
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--gray);
+    }
+
+    .register-link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-header">
+    <div class="login-logo">🧹</div>
+    <h1 class="login-title">CleanPro</h1>
+    <p class="login-subtitle">Автоматизированное рабочее место</p>
+</div>
+
+<form method="POST" action="{{ url_for('login') }}">
+    <div class="form-group">
+        <label for="username">Логин</label>
+        <input type="text" id="username" name="username" required autofocus>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%;">Войти</button>
+</form>
+
+<div class="register-link">
+    Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Клиенты - CleanPro{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h1>👥 Клиенты</h1>
+    <a href="{{ url_for('add_client') }}" class="btn btn-primary">➕ Добавить клиента</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя/Компания</th>
+                <th>Телефон</th>
+                <th>Email</th>
+                <th>Адрес</th>
+                <th>Объектов</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>{{ client.ID }}</td>
+                <td><strong>{{ client.FullName }}</strong></td>
+                <td>{{ client.Phone or '-' }}</td>
+                <td>{{ client.Email or '-' }}</td>
+                <td>{{ client.Address or '-' }}</td>
+                <td><span class="badge badge-info">{{ client.objects_count }}</span></td>
+                <td>
+                    <a href="{{ url_for('edit_client', id=client.ID) }}" class="btn btn-warning btn-sm">✏️</a>
+                    <a href="{{ url_for('delete_client', id=client.ID) }}"
+                       onclick="return confirm('Удалить клиента?')"
+                       class="btn btn-danger btn-sm">🗑️</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center">Клиенты не найдены</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

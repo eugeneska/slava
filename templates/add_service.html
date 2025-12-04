@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить услугу - CleanPro{% endblock %}
+
+{% block content %}
+<h1>➕ Добавить услугу</h1>
+
+<form method="POST" action="{{ url_for('add_service') }}">
+    <div class="form-group">
+        <label for="service_name">Название услуги *</label>
+        <input type="text" id="service_name" name="service_name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="price">Цена за единицу (BYN)</label>
+        <input type="number" step="0.01" id="price" name="price">
+    </div>
+
+    <div class="form-group">
+        <label for="unit">Единица измерения</label>
+        <input type="text" id="unit" name="unit" placeholder="кв.м, час, объект">
+    </div>
+
+    <div class="form-group">
+        <label for="duration">Примерная длительность (минуты)</label>
+        <input type="number" id="duration" name="duration">
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('services') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

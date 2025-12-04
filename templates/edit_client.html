@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать клиента - CleanPro{% endblock %}
+
+{% block content %}
+<h1>✏️ Редактировать клиента</h1>
+
+<form method="POST" action="{{ url_for('edit_client', id=client.ID) }}">
+    <div class="form-group">
+        <label for="fullname">Имя/Название компании *</label>
+        <input type="text" id="fullname" name="fullname" value="{{ client.FullName }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Телефон</label>
+        <input type="tel" id="phone" name="phone" value="{{ client.Phone or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ client.Email or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="address">Адрес</label>
+        <input type="text" id="address" name="address" value="{{ client.Address or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="company">Название компании</label>
+        <input type="text" id="company" name="company" value="{{ client.CompanyName or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="contact">Контактное лицо</label>
+        <input type="text" id="contact" name="contact" value="{{ client.ContactPerson or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes">{{ client.Notes or '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('clients') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

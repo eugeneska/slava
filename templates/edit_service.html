@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать услугу - CleanPro{% endblock %}
+
+{% block content %}
+<h1>✏️ Редактировать услугу</h1>
+
+<form method="POST" action="{{ url_for('edit_service', id=service.ID) }}">
+    <div class="form-group">
+        <label for="service_name">Название услуги *</label>
+        <input type="text" id="service_name" name="service_name" value="{{ service.ServiceName }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea id="description" name="description">{{ service.Description or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="price">Цена за единицу (BYN)</label>
+        <input type="number" step="0.01" id="price" name="price" value="{{ service.PricePerUnit or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="unit">Единица измерения</label>
+        <input type="text" id="unit" name="unit" value="{{ service.Unit or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="duration">Примерная длительность (минуты)</label>
+        <input type="number" id="duration" name="duration" value="{{ service.Duration or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Примечания</label>
+        <textarea id="notes" name="notes">{{ service.Notes or '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('services') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Отчеты - CleanPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .reports-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .report-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-left: 5px solid var(--primary);
+    }
+
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .report-card.clients {
+        border-left-color: #667eea;
+    }
+
+    .report-card.objects {
+        border-left-color: #764ba2;
+    }
+
+    .report-card.employees {
+        border-left-color: #48bb78;
+    }
+
+    .report-card.services {
+        border-left-color: #ed8936;
+    }
+
+    .report-card.schedules {
+        border-left-color: #4299e1;
+    }
+
+    .report-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+
+    .report-description {
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .report-stats {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .stat-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--gray);
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>📊 Отчеты</h1>
+<p style="color: var(--gray); margin-bottom: 2rem;">Выберите тип отчета для просмотра детальной информации и статистики</p>
+
+<div class="reports-grid">
+    <div class="report-card clients">
+        <div class="report-icon">👥</div>
+        <div class="report-title">Отчет по клиентам</div>
+        <div class="report-description">
+            Полный список клиентов с информацией о количестве объектов, заказах и общей выручке
+        </div>
+        <a href="{{ url_for('report_clients') }}" class="btn btn-primary">Просмотреть отчет</a>
+    </div>
+
+    <div class="report-card objects">
+        <div class="report-icon">🏢</div>
+        <div class="report-title">Отчет по объектам</div>
+        <div class="report-description">
+            Информация об объектах, количестве выполненных заказов и общей площади
+        </div>
+        <a href="{{ url_for('report_objects') }}" class="btn btn-primary">Просмотреть отчет</a>
+    </div>
+
+    <div class="report-card employees">
+        <div class="report-icon">👔</div>
+        <div class="report-title">Отчет по сотрудникам</div>
+        <div class="report-description">
+            Статистика по сотрудникам: количество заказов, выручка, средняя зарплата
+        </div>
+        <a href="{{ url_for('report_employees') }}" class="btn btn-primary">Просмотреть отчет</a>
+    </div>
+
+    <div class="report-card services">
+        <div class="report-icon">🛠️</div>
+        <div class="report-title">Отчет по услугам</div>
+        <div class="report-description">
+            Анализ услуг: популярность, выручка, количество выполненных заказов
+        </div>
+        <a href="{{ url_for('report_services') }}" class="btn btn-primary">Просмотреть отчет</a>
+    </div>
+
+    <div class="report-card schedules">
+        <div class="report-icon">📅</div>
+        <div class="report-title">Отчет по расписанию</div>
+        <div class="report-description">
+            Детальный отчет по заказам с возможностью фильтрации по статусу и датам
+        </div>
+        <a href="{{ url_for('report_schedules') }}" class="btn btn-primary">Просмотреть отчет</a>
+    </div>
+</div>
+{% endblock %}
+

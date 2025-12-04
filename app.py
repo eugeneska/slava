@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import traceback
 
 app = Flask(__name__)
@@ -210,7 +210,18 @@ def dashboard():
             ORDER BY s.ScheduledDate, s.ScheduledTime
             LIMIT 5
         ''')
-        stats['upcoming_schedules'] = cursor.fetchall()
+        upcoming_schedules = cursor.fetchall()
+        
+        # Конвертируем timedelta в строку времени для каждого расписания
+        for schedule in upcoming_schedules:
+            if schedule.get('ScheduledTime') and isinstance(schedule['ScheduledTime'], timedelta):
+                # Конвертируем timedelta в строку формата HH:MM
+                total_seconds = int(schedule['ScheduledTime'].total_seconds())
+                hours = total_seconds // 3600
+                minutes = (total_seconds % 3600) // 60
+                schedule['ScheduledTime'] = f"{hours:02d}:{minutes:02d}"
+        
+        stats['upcoming_schedules'] = upcoming_schedules
 
     except mysql.connector.Error as err:
         flash(f'Ошибка при получении статистики: {err}', 'error')
@@ -923,6 +934,15 @@ def schedules():
             ORDER BY s.ScheduledDate DESC, s.ScheduledTime DESC
         ''')
         schedules = cursor.fetchall()
+        
+        # Конвертируем timedelta в строку времени для каждого расписания
+        for schedule in schedules:
+            if schedule.get('ScheduledTime') and isinstance(schedule['ScheduledTime'], timedelta):
+                # Конвертируем timedelta в строку формата HH:MM
+                total_seconds = int(schedule['ScheduledTime'].total_seconds())
+                hours = total_seconds // 3600
+                minutes = (total_seconds % 3600) // 60
+                schedule['ScheduledTime'] = f"{hours:02d}:{minutes:02d}"
     except mysql.connector.Error as err:
         flash(f'Ошибка при получении расписания: {err}', 'error')
         schedules = []
@@ -1069,6 +1089,14 @@ def edit_schedule(id):
         conn.close()
         flash('Запись не найдена', 'error')
         return redirect(url_for('schedules'))
+    
+    # Конвертируем timedelta в строку времени для формы
+    if schedule.get('ScheduledTime') and isinstance(schedule['ScheduledTime'], timedelta):
+        # Конвертируем timedelta в строку формата HH:MM
+        total_seconds = int(schedule['ScheduledTime'].total_seconds())
+        hours = total_seconds // 3600
+        minutes = (total_seconds % 3600) // 60
+        schedule['ScheduledTime'] = f"{hours:02d}:{minutes:02d}"
 
     cursor.execute('SELECT ID, ObjectName FROM Object ORDER BY ObjectName')
     objects = cursor.fetchall()
@@ -1371,6 +1399,15 @@ def report_schedules():
 
         cursor.execute(query, params)
         schedules = cursor.fetchall()
+
+        # Конвертируем timedelta в строку времени для каждого расписания
+        for schedule in schedules:
+            if schedule.get('ScheduledTime') and isinstance(schedule['ScheduledTime'], timedelta):
+                # Конвертируем timedelta в строку формата HH:MM
+                total_seconds = int(schedule['ScheduledTime'].total_seconds())
+                hours = total_seconds // 3600
+                minutes = (total_seconds % 3600) // 60
+                schedule['ScheduledTime'] = f"{hours:02d}:{minutes:02d}"
 
         # Статистика
         cursor.execute('SELECT COUNT(*) as total FROM Schedule')

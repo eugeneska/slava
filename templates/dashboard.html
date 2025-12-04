@@ -163,7 +163,7 @@
             <span class="badge badge-info">
                 📅 {{ schedule.ScheduledDate.strftime('%d.%m.%Y') }}
                 {% if schedule.ScheduledTime %}
-                    {{ schedule.ScheduledTime.strftime('%H:%M') }}
+                    {{ schedule.ScheduledTime }}
                 {% endif %}
             </span>
         </div>
